@@ -1,0 +1,256 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
+import { generalServices, contractingServices } from "@/lib/services";
+import { SITE } from "@/lib/site";
+
+const NAV = [
+  { label: "Home", href: "/" },
+  { label: "About", href: "/about" },
+  { label: "Services", href: "/services" },
+  { label: "Contact", href: "/contact" },
+];
+
+export default function Header() {
+  const pathname = usePathname();
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [servicesOpen, setServicesOpen] = useState(false);
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
+  const servicesRef = useRef<HTMLDivElement>(null);
+
+  // Keep the dropdown open until a page is selected or the user clicks/taps
+  // outside of it (also close on Escape for keyboard users).
+  useEffect(() => {
+    if (!servicesOpen) return;
+
+    const handlePointerDown = (event: MouseEvent | TouchEvent) => {
+      if (!servicesRef.current?.contains(event.target as Node)) {
+        setServicesOpen(false);
+      }
+    };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setServicesOpen(false);
+    };
+
+    document.addEventListener("mousedown", handlePointerDown);
+    document.addEventListener("touchstart", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("touchstart", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [servicesOpen]);
+
+  const isActive = (href: string) =>
+    href === "/" ? pathname === "/" : pathname.startsWith(href);
+
+  return (
+    <header className="sticky top-0 z-50 bg-transparent px-5 pt-4 pb-2">
+      <div className="mx-auto flex max-w-[1180px] items-center justify-between gap-6 rounded-full border border-navy/10 bg-cream/70 py-2.5 pr-3 pl-6 shadow-[0_10px_34px_rgba(11,46,79,0.10)] backdrop-blur-md backdrop-saturate-150">
+        <Link
+          href="/"
+          className="font-serif text-2xl font-semibold tracking-[0.2px] text-navy"
+        >
+          {SITE.name}
+        </Link>
+
+        {/* Desktop nav */}
+        <nav className="hidden items-center gap-1.5 lg:flex">
+          {NAV.map((item) =>
+            item.label === "Services" ? (
+              <div
+                key={item.href}
+                ref={servicesRef}
+                className="relative"
+                onMouseEnter={() => setServicesOpen(true)}
+              >
+                <button
+                  type="button"
+                  aria-haspopup="true"
+                  aria-expanded={servicesOpen}
+                  onClick={() => setServicesOpen((v) => !v)}
+                  onFocus={() => setServicesOpen(true)}
+                  className={`flex items-center gap-1.5 rounded-full px-4 py-2.5 text-[15px] font-semibold transition-colors ${
+                    servicesOpen || isActive("/services")
+                      ? "bg-terracotta/10 text-terracotta"
+                      : "text-navy hover:text-terracotta"
+                  }`}
+                >
+                  Services
+                  <span
+                    className={`mt-0.5 text-[10px] transition-transform duration-200 ${
+                      servicesOpen ? "rotate-180" : ""
+                    }`}
+                  >
+                    ▾
+                  </span>
+                </button>
+                {servicesOpen && (
+                  <div className="animate-dropdown absolute top-full left-1/2 mt-2 flex w-[560px] -translate-x-1/2 gap-9 rounded-xl border border-navy/10 bg-white p-6 shadow-[0_20px_40px_rgba(11,46,79,0.14)]">
+                    <DropdownColumn
+                      title="General Services"
+                      items={generalServices}
+                      onNavigate={() => setServicesOpen(false)}
+                    />
+                    <DropdownColumn
+                      title="Contracting Services"
+                      items={contractingServices}
+                      onNavigate={() => setServicesOpen(false)}
+                    />
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`px-4 py-2.5 text-[15px] font-semibold ${
+                  isActive(item.href) ? "text-terracotta" : "text-navy"
+                }`}
+              >
+                {item.label}
+              </Link>
+            ),
+          )}
+        </nav>
+
+        <div className="flex items-center gap-3.5">
+          <Link
+            href="/contact"
+            className="hidden rounded-full bg-terracotta px-[22px] py-3 text-sm font-bold whitespace-nowrap text-white shadow-[0_8px_20px_rgba(193,80,46,0.28)] transition-all hover:-translate-y-0.5 hover:bg-terracotta-dark lg:inline-block"
+          >
+            Request a Quote
+          </Link>
+          {/* Mobile toggle */}
+          <button
+            type="button"
+            aria-label="Open menu"
+            onClick={() => setMobileOpen(true)}
+            className="flex h-[42px] w-[42px] flex-col items-center justify-center gap-1 rounded-[10px] border border-navy/20 lg:hidden"
+          >
+            <span className="h-0.5 w-[18px] bg-navy" />
+            <span className="h-0.5 w-[18px] bg-navy" />
+            <span className="h-0.5 w-[18px] bg-navy" />
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile overlay */}
+      {mobileOpen && (
+        <div className="fixed inset-0 z-[100] overflow-y-auto bg-navy">
+          <div className="flex items-center justify-between px-7 py-5">
+            <span className="font-serif text-[22px] font-semibold text-white">
+              {SITE.name}
+            </span>
+            <button
+              type="button"
+              aria-label="Close menu"
+              onClick={() => setMobileOpen(false)}
+              className="flex h-[42px] w-[42px] items-center justify-center rounded-[10px] border border-white/30 text-xl text-white"
+            >
+              ✕
+            </button>
+          </div>
+          <div className="flex flex-col gap-1 px-7 pt-3 pb-16">
+            <Link
+              href="/"
+              onClick={() => setMobileOpen(false)}
+              className="border-b border-white/10 py-4 text-xl font-semibold text-white"
+            >
+              Home
+            </Link>
+            <Link
+              href="/about"
+              onClick={() => setMobileOpen(false)}
+              className="border-b border-white/10 py-4 text-xl font-semibold text-white"
+            >
+              About
+            </Link>
+            <button
+              type="button"
+              onClick={() => setMobileServicesOpen((v) => !v)}
+              className="flex items-center justify-between border-b border-white/10 py-4 text-xl font-semibold text-white"
+            >
+              Services <span className="text-sm">{mobileServicesOpen ? "▲" : "▼"}</span>
+            </button>
+            {mobileServicesOpen && (
+              <div className="flex flex-col gap-3.5 px-3 pt-2 pb-5">
+                <span className="text-[11px] font-extrabold tracking-[0.08em] text-terracotta uppercase">
+                  General Services
+                </span>
+                {generalServices.map((s) => (
+                  <Link
+                    key={s.slug}
+                    href={`/services/${s.slug}`}
+                    onClick={() => setMobileOpen(false)}
+                    className="text-base font-medium text-white/85"
+                  >
+                    {s.title}
+                  </Link>
+                ))}
+                <span className="mt-2 text-[11px] font-extrabold tracking-[0.08em] text-terracotta uppercase">
+                  Contracting Services
+                </span>
+                {contractingServices.map((s) => (
+                  <Link
+                    key={s.slug}
+                    href={`/services/${s.slug}`}
+                    onClick={() => setMobileOpen(false)}
+                    className="text-base font-medium text-white/85"
+                  >
+                    {s.title}
+                  </Link>
+                ))}
+              </div>
+            )}
+            <Link
+              href="/contact"
+              onClick={() => setMobileOpen(false)}
+              className="py-4 text-xl font-semibold text-white"
+            >
+              Contact
+            </Link>
+            <Link
+              href="/contact"
+              onClick={() => setMobileOpen(false)}
+              className="mt-6 rounded-full bg-terracotta px-6 py-4 text-center text-base font-bold text-white"
+            >
+              Request a Quote
+            </Link>
+          </div>
+        </div>
+      )}
+    </header>
+  );
+}
+
+function DropdownColumn({
+  title,
+  items,
+  onNavigate,
+}: {
+  title: string;
+  items: { slug: string; title: string }[];
+  onNavigate: () => void;
+}) {
+  return (
+    <div className="flex-1">
+      <div className="mb-3 text-[11px] font-extrabold tracking-[0.08em] text-terracotta uppercase">
+        {title}
+      </div>
+      {items.map((s) => (
+        <Link
+          key={s.slug}
+          href={`/services/${s.slug}`}
+          onClick={onNavigate}
+          className="block border-b border-navy/[0.06] py-2 text-[14.5px] font-semibold text-navy hover:text-terracotta"
+        >
+          {s.title}
+        </Link>
+      ))}
+    </div>
+  );
+}

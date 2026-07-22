@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand palette */
+  --color-navy: #0b2e4f;
+  --color-navy-dark: #082238;
+  --color-cream: #fbf8f3;
+  --color-cream-alt: #f3ece1;
+  --color-terracotta: #c1502e;
+  --color-terracotta-dark: #a6421f;
+  --color-peach: #e8a585;
+  --color-muted: #5b564f;
+  --color-ink: #1e2a33;
+
+  /* Typography (wired to next/font CSS variables) */
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-newsreader), ui-serif, Georgia, serif;
+}
+
+:root {
+  /* Subtle dotted background patterns used behind hero sections */
+  --dots-cream: radial-gradient(rgba(11, 46, 79, 0.1) 1.5px, transparent 1.5px);
+  --dots-navy: radial-gradient(
+    rgba(255, 255, 255, 0.16) 1.5px,
+    transparent 1.5px
+  );
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.bg-dots-cream {
+  background:
+    var(--dots-cream) 0 0 / 22px 22px,
+    var(--color-cream);
+}
+
+.bg-dots-navy {
+  background:
+    var(--dots-navy) 0 0 / 22px 22px,
+    var(--color-navy);
+}
+
+@keyframes helmontFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-dropdown {
+  animation: helmontFadeIn 0.15s ease-out;
+}
