@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { generalServices, contractingServices } from "@/lib/services";
 import { SITE } from "@/lib/site";
+import { EASE_IN_OUT, EASE_OUT } from "@/components/motion/tokens";
 
 const NAV = [
   { label: "Home", href: "/" },
@@ -49,7 +51,12 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 bg-transparent px-5 pt-4 pb-2">
-      <div className="mx-auto flex max-w-[1180px] items-center justify-between gap-6 rounded-full border border-navy/10 bg-cream/70 py-2.5 pr-3 pl-6 shadow-[0_10px_34px_rgba(11,46,79,0.10)] backdrop-blur-md backdrop-saturate-150">
+      <motion.div
+        initial={{ opacity: 0, y: -18 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.55, ease: EASE_OUT }}
+        className="mx-auto flex max-w-[1180px] items-center justify-between gap-6 rounded-full border border-navy/10 bg-cream/70 py-2.5 pr-3 pl-6 shadow-[0_10px_34px_rgba(11,46,79,0.10)] backdrop-blur-md backdrop-saturate-150"
+      >
         <Link
           href="/"
           className="font-serif text-2xl font-semibold tracking-[0.2px] text-navy"
@@ -88,20 +95,29 @@ export default function Header() {
                     ▾
                   </span>
                 </button>
-                {servicesOpen && (
-                  <div className="animate-dropdown absolute top-full left-1/2 mt-2 flex w-[560px] -translate-x-1/2 gap-9 rounded-xl border border-navy/10 bg-white p-6 shadow-[0_20px_40px_rgba(11,46,79,0.14)]">
-                    <DropdownColumn
-                      title="General Services"
-                      items={generalServices}
-                      onNavigate={() => setServicesOpen(false)}
-                    />
-                    <DropdownColumn
-                      title="Contracting Services"
-                      items={contractingServices}
-                      onNavigate={() => setServicesOpen(false)}
-                    />
-                  </div>
-                )}
+                <AnimatePresence>
+                  {servicesOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10, scale: 0.97 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -8, scale: 0.98 }}
+                      transition={{ duration: 0.2, ease: EASE_OUT }}
+                      style={{ originY: 0 }}
+                      className="absolute top-full left-1/2 mt-2 flex w-[560px] -translate-x-1/2 gap-9 rounded-xl border border-navy/10 bg-white p-6 shadow-[0_20px_40px_rgba(11,46,79,0.14)]"
+                    >
+                      <DropdownColumn
+                        title="General Services"
+                        items={generalServices}
+                        onNavigate={() => setServicesOpen(false)}
+                      />
+                      <DropdownColumn
+                        title="Contracting Services"
+                        items={contractingServices}
+                        onNavigate={() => setServicesOpen(false)}
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
             ) : (
               <Link
@@ -136,94 +152,166 @@ export default function Header() {
             <span className="h-0.5 w-[18px] bg-navy" />
           </button>
         </div>
-      </div>
+      </motion.div>
 
       {/* Mobile overlay */}
-      {mobileOpen && (
-        <div className="fixed inset-0 z-[100] overflow-y-auto bg-navy">
-          <div className="flex items-center justify-between px-7 py-5">
-            <span className="font-serif text-[22px] font-semibold text-white">
-              {SITE.name}
-            </span>
-            <button
-              type="button"
-              aria-label="Close menu"
-              onClick={() => setMobileOpen(false)}
-              className="flex h-[42px] w-[42px] items-center justify-center rounded-[10px] border border-white/30 text-xl text-white"
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -24 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -16, transition: { duration: 0.2, ease: EASE_IN_OUT } }}
+            transition={{ duration: 0.3, ease: EASE_OUT }}
+            className="fixed inset-0 z-[100] overflow-y-auto bg-navy"
+          >
+            <div className="flex items-center justify-between px-7 py-5">
+              <span className="font-serif text-[22px] font-semibold text-white">
+                {SITE.name}
+              </span>
+              <button
+                type="button"
+                aria-label="Close menu"
+                onClick={() => setMobileOpen(false)}
+                className="flex h-[42px] w-[42px] items-center justify-center rounded-[10px] border border-white/30 text-xl text-white"
+              >
+                ✕
+              </button>
+            </div>
+            <motion.div
+              className="flex flex-col gap-1 px-7 pt-3 pb-16"
+              initial="hidden"
+              animate="visible"
+              variants={{
+                hidden: {},
+                visible: {
+                  transition: { staggerChildren: 0.05, delayChildren: 0.08 },
+                },
+              }}
             >
-              ✕
-            </button>
-          </div>
-          <div className="flex flex-col gap-1 px-7 pt-3 pb-16">
-            <Link
-              href="/"
-              onClick={() => setMobileOpen(false)}
-              className="border-b border-white/10 py-4 text-xl font-semibold text-white"
-            >
-              Home
-            </Link>
-            <Link
-              href="/about"
-              onClick={() => setMobileOpen(false)}
-              className="border-b border-white/10 py-4 text-xl font-semibold text-white"
-            >
-              About
-            </Link>
-            <button
-              type="button"
-              onClick={() => setMobileServicesOpen((v) => !v)}
-              className="flex items-center justify-between border-b border-white/10 py-4 text-xl font-semibold text-white"
-            >
-              Services <span className="text-sm">{mobileServicesOpen ? "▲" : "▼"}</span>
-            </button>
-            {mobileServicesOpen && (
-              <div className="flex flex-col gap-3.5 px-3 pt-2 pb-5">
-                <span className="text-[11px] font-extrabold tracking-[0.08em] text-terracotta uppercase">
-                  General Services
-                </span>
-                {generalServices.map((s) => (
-                  <Link
-                    key={s.slug}
-                    href={`/services/${s.slug}`}
-                    onClick={() => setMobileOpen(false)}
-                    className="text-base font-medium text-white/85"
+              <MobileItem>
+                <Link
+                  href="/"
+                  onClick={() => setMobileOpen(false)}
+                  className="block border-b border-white/10 py-4 text-xl font-semibold text-white"
+                >
+                  Home
+                </Link>
+              </MobileItem>
+              <MobileItem>
+                <Link
+                  href="/about"
+                  onClick={() => setMobileOpen(false)}
+                  className="block border-b border-white/10 py-4 text-xl font-semibold text-white"
+                >
+                  About
+                </Link>
+              </MobileItem>
+              <MobileItem>
+                <button
+                  type="button"
+                  aria-expanded={mobileServicesOpen}
+                  onClick={() => setMobileServicesOpen((v) => !v)}
+                  className="flex w-full items-center justify-between border-b border-white/10 py-4 text-xl font-semibold text-white"
+                >
+                  Services{" "}
+                  <motion.span
+                    className="text-sm"
+                    animate={{ rotate: mobileServicesOpen ? 180 : 0 }}
+                    transition={{ duration: 0.25, ease: EASE_OUT }}
                   >
-                    {s.title}
-                  </Link>
-                ))}
-                <span className="mt-2 text-[11px] font-extrabold tracking-[0.08em] text-terracotta uppercase">
-                  Contracting Services
-                </span>
-                {contractingServices.map((s) => (
-                  <Link
-                    key={s.slug}
-                    href={`/services/${s.slug}`}
-                    onClick={() => setMobileOpen(false)}
-                    className="text-base font-medium text-white/85"
-                  >
-                    {s.title}
-                  </Link>
-                ))}
-              </div>
-            )}
-            <Link
-              href="/contact"
-              onClick={() => setMobileOpen(false)}
-              className="py-4 text-xl font-semibold text-white"
-            >
-              Contact
-            </Link>
-            <Link
-              href="/contact"
-              onClick={() => setMobileOpen(false)}
-              className="mt-6 rounded-full bg-terracotta px-6 py-4 text-center text-base font-bold text-white"
-            >
-              Request a Quote
-            </Link>
-          </div>
-        </div>
-      )}
+                    ▼
+                  </motion.span>
+                </button>
+                <AnimatePresence initial={false}>
+                  {mobileServicesOpen && (
+                    <motion.div
+                      key="mobile-services"
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.28, ease: EASE_IN_OUT }}
+                      className="overflow-hidden"
+                    >
+                      <div className="flex flex-col gap-3.5 px-3 pt-2 pb-5">
+                        <span className="text-[11px] font-extrabold tracking-[0.08em] text-terracotta uppercase">
+                          General Services
+                        </span>
+                        {generalServices.map((s) => (
+                          <Link
+                            key={s.slug}
+                            href={`/services/${s.slug}`}
+                            onClick={() => setMobileOpen(false)}
+                            className="text-base font-medium text-white/85"
+                          >
+                            {s.title}
+                          </Link>
+                        ))}
+                        <span className="mt-2 text-[11px] font-extrabold tracking-[0.08em] text-terracotta uppercase">
+                          Contracting Services
+                        </span>
+                        {contractingServices.map((s) => (
+                          <Link
+                            key={s.slug}
+                            href={`/services/${s.slug}`}
+                            onClick={() => setMobileOpen(false)}
+                            className="text-base font-medium text-white/85"
+                          >
+                            {s.title}
+                          </Link>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </MobileItem>
+              <MobileItem>
+                <Link
+                  href="/contact"
+                  onClick={() => setMobileOpen(false)}
+                  className="block py-4 text-xl font-semibold text-white"
+                >
+                  Contact
+                </Link>
+              </MobileItem>
+              <MobileItem className="mt-6">
+                <Link
+                  href="/contact"
+                  onClick={() => setMobileOpen(false)}
+                  className="block rounded-full bg-terracotta px-6 py-4 text-center text-base font-bold text-white"
+                >
+                  Request a Quote
+                </Link>
+              </MobileItem>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
+  );
+}
+
+/** One row of the mobile menu — slides in as part of the overlay's cascade. */
+function MobileItem({
+  children,
+  className = "",
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <motion.div
+      className={className}
+      variants={{
+        hidden: { opacity: 0, x: -18 },
+        visible: {
+          opacity: 1,
+          x: 0,
+          transition: { duration: 0.35, ease: EASE_OUT },
+        },
+      }}
+    >
+      {children}
+    </motion.div>
   );
 }
 

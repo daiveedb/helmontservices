@@ -17,7 +17,7 @@ export default function ServiceCard({
   return (
     <Link
       href={`/services/${service.slug}`}
-      className={`group flex flex-col gap-2.5 rounded-2xl p-[26px] transition-all duration-200 hover:-translate-y-1.5 ${
+      className={`group flex h-full flex-col gap-2.5 rounded-2xl p-[26px] transition-all duration-200 hover:-translate-y-1.5 ${
         isGeneral
           ? "border border-navy/10 bg-white hover:border-terracotta hover:shadow-[0_16px_32px_rgba(11,46,79,0.14)]"
           : "bg-navy hover:shadow-[0_16px_32px_rgba(11,46,79,0.28)]"

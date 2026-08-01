@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Container from "@/components/ui/Container";
+import { Stagger, StaggerItem } from "@/components/motion/Stagger";
 import { generalServices } from "@/lib/services";
 import { SITE, PARTNERS } from "@/lib/site";
 
@@ -8,17 +9,17 @@ export default function Footer() {
   return (
     <footer className="bg-navy-dark px-6 pt-16 pb-8 sm:px-8">
       <Container className="!px-0">
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_0.8fr_1fr_1.2fr]">
-          <div>
+        <Stagger className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_0.8fr_1fr_1.2fr]">
+          <StaggerItem>
             <div className="mb-3.5 font-serif text-[22px] font-semibold text-white">
               {SITE.name}
             </div>
             <p className="max-w-[280px] text-sm leading-relaxed text-white/60">
               {SITE.description}
             </p>
-          </div>
+          </StaggerItem>
 
-          <div>
+          <StaggerItem>
             <FooterHeading>Company</FooterHeading>
             <div className="flex flex-col gap-2.5">
               <FooterLink href="/">Home</FooterLink>
@@ -26,9 +27,9 @@ export default function Footer() {
               <FooterLink href="/services">Services</FooterLink>
               <FooterLink href="/contact">Contact</FooterLink>
             </div>
-          </div>
+          </StaggerItem>
 
-          <div>
+          <StaggerItem>
             <FooterHeading>General Services</FooterHeading>
             <div className="flex flex-col gap-2.5">
               {generalServices.map((s) => (
@@ -41,9 +42,9 @@ export default function Footer() {
                 </Link>
               ))}
             </div>
-          </div>
+          </StaggerItem>
 
-          <div>
+          <StaggerItem>
             <FooterHeading>Contact</FooterHeading>
             <div className="flex flex-col gap-2.5 text-sm leading-relaxed text-white/60">
               <span>{SITE.address}</span>
@@ -76,8 +77,8 @@ export default function Footer() {
                 </a>
               ))}
             </div>
-          </div>
-        </div>
+          </StaggerItem>
+        </Stagger>
 
         <div className="mt-10 border-t border-white/10 pt-6 text-center text-[13px] text-white/40">
           © {year} {SITE.name}. All rights reserved.

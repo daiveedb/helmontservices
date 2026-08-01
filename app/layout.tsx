@@ -3,6 +3,8 @@ import { Manrope, Newsreader } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import MotionProvider from "@/components/motion/MotionProvider";
+import PageTransition from "@/components/motion/PageTransition";
 import { SITE } from "@/lib/site";
 
 const manrope = Manrope({
@@ -37,9 +39,11 @@ export default function RootLayout({
       className={`${manrope.variable} ${newsreader.variable} h-full`}
     >
       <body className="min-h-full bg-cream text-ink antialiased">
-        <Header />
-        <main>{children}</main>
-        <Footer />
+        <MotionProvider>
+          <Header />
+          <PageTransition>{children}</PageTransition>
+          <Footer />
+        </MotionProvider>
       </body>
     </html>
   );
