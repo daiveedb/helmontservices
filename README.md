@@ -38,7 +38,8 @@ public/images/            Project photos (HVAC + power-plant project work)
 
 ## Content notes (client feedback implemented)
 
-- Phone number `09051000307` removed; the single listed line is `0701 063 3390`.
+- Phone number `09051000307` replaced by `0704 822 0528`; the listed lines are
+  `0701 063 3390` and `0704 822 0528` — edit in `lib/site.ts`.
 - Four email addresses across the site (footer + contact page): `Info@`, `Admin@`,
   `Catherine@`, and `Helen@helmontservices.com` — edit in `lib/site.ts`.
 - **HVAC Installation & Servicing** (`/services/hvac`) has a Project Gallery of HVAC photos
