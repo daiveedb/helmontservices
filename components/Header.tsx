@@ -20,7 +20,17 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const servicesRef = useRef<HTMLDivElement>(null);
+
+  // Every page opens on a full-bleed photograph, so the bar rides transparent
+  // over the image and only becomes a solid cream pill once it leaves the hero.
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   // Keep the dropdown open until a page is selected or the user clicks/taps
   // outside of it (also close on Escape for keyboard users).
@@ -50,16 +60,26 @@ export default function Header() {
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
-    <header className="sticky top-0 z-50 bg-transparent px-5 pt-4 pb-2">
+    <header className="fixed inset-x-0 top-0 z-50 bg-transparent px-5 pt-4 pb-2">
       <motion.div
         initial={{ opacity: 0, y: -18 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.55, ease: EASE_OUT }}
-        className="mx-auto flex max-w-[1180px] items-center justify-between gap-6 rounded-full border border-navy/10 bg-cream/70 py-2.5 pr-3 pl-6 shadow-[0_10px_34px_rgba(11,46,79,0.10)] backdrop-blur-md backdrop-saturate-150"
+        className={`mx-auto flex max-w-[1180px] items-center justify-between gap-6 rounded-full border py-2.5 pr-3 pl-6 backdrop-blur-md backdrop-saturate-150 transition-colors duration-300 ${
+          scrolled
+            ? "border-navy/10 bg-cream/80 shadow-[0_10px_34px_rgba(11,46,79,0.10)]"
+            : "border-white/20 bg-navy/35"
+        }`}
       >
+        {/* Newsreader reserves far more room above the baseline than below
+            (18px ascent vs 6px descent at this size), and the wordmark has no
+            descenders — so a geometrically centred box still reads ~2px high.
+            The nudge lines the glyphs up with the nav links optically. */}
         <Link
           href="/"
-          className="font-serif text-2xl font-semibold tracking-[0.2px] text-navy"
+          className={`translate-y-[2px] font-serif text-2xl font-semibold tracking-[0.2px] transition-colors ${
+            scrolled ? "text-navy" : "text-white"
+          }`}
         >
           {SITE.name}
         </Link>
@@ -82,8 +102,12 @@ export default function Header() {
                   onFocus={() => setServicesOpen(true)}
                   className={`flex items-center gap-1.5 rounded-full px-4 py-2.5 text-[15px] font-semibold transition-colors ${
                     servicesOpen || isActive("/services")
-                      ? "bg-terracotta/10 text-terracotta"
-                      : "text-navy hover:text-terracotta"
+                      ? scrolled
+                        ? "bg-terracotta/10 text-terracotta"
+                        : "bg-white/15 text-peach"
+                      : scrolled
+                        ? "text-navy hover:text-terracotta"
+                        : "text-white hover:text-peach"
                   }`}
                 >
                   Services
@@ -123,8 +147,14 @@ export default function Header() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`px-4 py-2.5 text-[15px] font-semibold ${
-                  isActive(item.href) ? "text-terracotta" : "text-navy"
+                className={`px-4 py-2.5 text-[15px] font-semibold transition-colors ${
+                  isActive(item.href)
+                    ? scrolled
+                      ? "text-terracotta"
+                      : "text-peach"
+                    : scrolled
+                      ? "text-navy hover:text-terracotta"
+                      : "text-white hover:text-peach"
                 }`}
               >
                 {item.label}
@@ -145,11 +175,18 @@ export default function Header() {
             type="button"
             aria-label="Open menu"
             onClick={() => setMobileOpen(true)}
-            className="flex h-[42px] w-[42px] flex-col items-center justify-center gap-1 rounded-[10px] border border-navy/20 lg:hidden"
+            className={`flex h-[42px] w-[42px] flex-col items-center justify-center gap-1 rounded-[10px] border transition-colors lg:hidden ${
+              scrolled ? "border-navy/20" : "border-white/40"
+            }`}
           >
-            <span className="h-0.5 w-[18px] bg-navy" />
-            <span className="h-0.5 w-[18px] bg-navy" />
-            <span className="h-0.5 w-[18px] bg-navy" />
+            {[0, 1, 2].map((i) => (
+              <span
+                key={i}
+                className={`h-0.5 w-[18px] transition-colors ${
+                  scrolled ? "bg-navy" : "bg-white"
+                }`}
+              />
+            ))}
           </button>
         </div>
       </motion.div>

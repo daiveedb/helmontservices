@@ -4,6 +4,9 @@ import Image from "next/image";
 import Link from "next/link";
 import Container from "@/components/ui/Container";
 import Button from "@/components/ui/Button";
+import Eyebrow from "@/components/ui/Eyebrow";
+import PageHero from "@/components/PageHero";
+import ServiceCard from "@/components/ServiceCard";
 import CtaBand from "@/components/CtaBand";
 import Reveal from "@/components/motion/Reveal";
 import Typewriter from "@/components/motion/Typewriter";
@@ -15,6 +18,7 @@ import {
   contractingServices,
   ADVANTAGES,
 } from "@/lib/services";
+import { FEATURE } from "@/lib/media";
 
 export function generateStaticParams() {
   return SERVICES.map((s) => ({ slug: s.slug }));
@@ -48,107 +52,103 @@ export default async function ServiceDetailPage({
     .filter((s) => s.slug !== service.slug)
     .slice(0, 3);
 
+  // The banner already shows the lead photo — don't repeat it in the gallery.
+  const gallery = (service.gallery ?? []).filter(
+    (img) => img.src !== service.image.src,
+  );
+
   return (
     <>
-      {/* Breadcrumb */}
-      <Container className="flex gap-2 pt-8 text-[13.5px] text-muted">
-        <Link href="/services" className="font-semibold text-navy">
-          Services
-        </Link>
-        <span>/</span>
-        <span>{service.category}</span>
-        <span>/</span>
-        <span className="font-semibold text-terracotta">{service.title}</span>
-      </Container>
+      <PageHero
+        image={service.image}
+        eyebrow={service.category}
+        title={<Typewriter text={service.title} speed={45} caretClassName="bg-peach" />}
+        subtitle={service.blurb}
+        size="tall"
+        above={
+          <nav className="flex flex-wrap items-center gap-2 text-[13.5px] text-white/70">
+            <Link href="/services" className="font-semibold text-white hover:text-peach">
+              Services
+            </Link>
+            <span>/</span>
+            <span>{service.category}</span>
+            <span>/</span>
+            <span className="font-semibold text-peach">{service.title}</span>
+          </nav>
+        }
+      >
+        <div className="flex flex-wrap gap-4">
+          <Button href="/contact">Request This Service</Button>
+          <Button href="/services" variant="outlineLight">
+            All Services
+          </Button>
+        </div>
+      </PageHero>
 
-      {/* Hero */}
-      <section className="bg-dots-cream">
-        <Container className="grid items-center gap-16 pt-9 pb-15 lg:grid-cols-[1.1fr_0.9fr]">
-          <Stagger stagger={0.12} amount={0}>
-            <StaggerItem className="mb-4">
-              <div className="text-xs font-extrabold tracking-[0.08em] text-terracotta uppercase">
-                {service.category}
-              </div>
-            </StaggerItem>
-            <StaggerItem className="mb-5">
-              <h1 className="font-serif text-[38px] leading-[1.15] font-semibold text-navy sm:text-[42px]">
-                <Typewriter text={service.title} speed={45} />
-              </h1>
-            </StaggerItem>
-            <StaggerItem className="mb-8">
-              <p className="text-[17px] leading-relaxed text-muted">
-                {service.blurb}
-              </p>
-            </StaggerItem>
-            <StaggerItem>
-              <div className="flex flex-wrap gap-4">
-                <Button href="/contact" variant="navy">
-                  Request This Service
-                </Button>
-                <Button href="/services" variant="outline">
-                  All Services
-                </Button>
-              </div>
-            </StaggerItem>
-          </Stagger>
-
-          {service.gallery ? (
-            <Reveal
-              direction="left"
-              delay={0.15}
-              duration={0.8}
-              scaleFrom={0.94}
-              amount={0}
-              className="relative aspect-4/3 overflow-hidden rounded-[20px] shadow-[0_20px_50px_rgba(11,46,79,0.18)]"
-            >
-              <Image
-                src={service.gallery[0].src}
-                alt={service.gallery[0].alt}
-                fill
-                priority
-                sizes="(max-width: 1024px) 100vw, 45vw"
-                className="object-cover"
-              />
+      {/* What's included — checklist beside a supporting photo */}
+      <section className="bg-cream-alt">
+        <Container className="grid items-center gap-14 py-20 lg:grid-cols-[0.9fr_1.1fr]">
+          <Reveal
+            direction="right"
+            scaleFrom={0.97}
+            duration={0.75}
+            className="relative aspect-4/3 overflow-hidden rounded-[20px] shadow-[0_20px_50px_rgba(11,46,79,0.18)]"
+          >
+            <Image
+              src={(gallery[0] ?? service.image).src}
+              alt={(gallery[0] ?? service.image).alt}
+              fill
+              sizes="(max-width: 1024px) 100vw, 45vw"
+              className="object-cover"
+            />
+          </Reveal>
+          <div>
+            <Reveal>
+              <Eyebrow className="mb-4">Scope</Eyebrow>
+              <h2 className="mb-8 font-serif text-[30px] leading-[1.15] font-semibold text-navy sm:text-[38px]">
+                What&rsquo;s Included
+              </h2>
             </Reveal>
-          ) : (
-            <Reveal
-              direction="left"
-              delay={0.15}
-              scaleFrom={0.94}
-              amount={0}
-              className="flex aspect-4/3 items-center justify-center rounded-[20px] bg-cream-alt p-6 text-center"
-            >
-              <span className="font-serif text-2xl font-semibold text-navy/70">
-                {service.title}
-              </span>
-            </Reveal>
-          )}
+            <Stagger stagger={0.07} className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {service.points.map((pt) => (
+                <StaggerItem
+                  key={pt}
+                  className="flex h-full items-center gap-3 rounded-xl bg-white px-5.5 py-5 shadow-[0_2px_10px_rgba(11,46,79,0.05)]"
+                >
+                  <span className="h-2 w-2 shrink-0 rounded-full bg-terracotta" />
+                  <span className="text-[15px] font-semibold text-navy">
+                    {pt}
+                  </span>
+                </StaggerItem>
+              ))}
+            </Stagger>
+          </div>
         </Container>
       </section>
 
-      {/* Project gallery */}
-      {service.gallery && service.gallery.length > 1 && (
+      {/* Gallery */}
+      {gallery.length > 0 && (
         <section>
-          <Container className="py-18">
-            <Reveal>
-              <h2 className="mb-2 font-serif text-[28px] font-semibold text-navy">
-                Project Gallery
+          <Container className="py-20">
+            <Reveal className="mb-9">
+              <Eyebrow className="mb-4">In the Field</Eyebrow>
+              <h2 className="font-serif text-[30px] font-semibold text-navy sm:text-[38px]">
+                {service.title}
               </h2>
-              <p className="mb-8 text-[15px] text-muted">
-                A look at recent {service.title.toLowerCase()} work from our
-                teams on site.
-              </p>
             </Reveal>
-            <Stagger stagger={0.1} className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-              {service.gallery.map((img) => (
+            <Stagger
+              stagger={0.1}
+              className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3"
+            >
+              {gallery.map((img) => (
                 <StaggerItem key={img.src}>
-                  <figure className="relative aspect-4/3 overflow-hidden rounded-2xl border border-navy/10">
+                  <figure className="group relative aspect-4/3 overflow-hidden rounded-2xl bg-navy">
                     <Image
                       src={img.src}
                       alt={img.alt}
                       fill
-                      sizes="(max-width: 640px) 100vw, 50vw"
-                      className="object-cover"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     />
                   </figure>
                 </StaggerItem>
@@ -158,39 +158,17 @@ export default async function ServiceDetailPage({
         </section>
       )}
 
-      {/* What's included */}
-      <section className="bg-cream-alt">
-        <Container className="py-18">
-          <Reveal>
-            <h2 className="mb-8 font-serif text-[28px] font-semibold text-navy">
-              What&rsquo;s Included
-            </h2>
-          </Reveal>
-          <Stagger stagger={0.06} className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-            {service.points.map((pt) => (
-              <StaggerItem
-                key={pt}
-                className="flex h-full items-center gap-3 rounded-xl bg-white px-5.5 py-5"
-              >
-                <span className="h-2 w-2 shrink-0 rounded-full bg-terracotta" />
-                <span className="text-[15px] font-semibold text-navy">{pt}</span>
-              </StaggerItem>
-            ))}
-          </Stagger>
-        </Container>
-      </section>
-
       {/* Why Helmont */}
-      <section>
-        <Container className="py-18">
+      <section className="bg-cream-alt">
+        <Container className="py-20">
           <Reveal>
-            <h2 className="mb-8 font-serif text-[28px] font-semibold text-navy">
+            <h2 className="mb-10 font-serif text-[30px] font-semibold text-navy sm:text-[36px]">
               Why Helmont Services
             </h2>
           </Reveal>
-          <Stagger className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <Stagger className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {ADVANTAGES.map((adv) => (
-              <StaggerItem key={adv.num}>
+              <StaggerItem key={adv.num} className="border-t border-navy/15 pt-4">
                 <div className="mb-1 text-[15px] font-bold text-navy">
                   {adv.title}
                 </div>
@@ -205,22 +183,18 @@ export default async function ServiceDetailPage({
 
       {/* Related */}
       {related.length > 0 && (
-        <section className="bg-dots-navy">
-          <Container className="py-16">
-            <Reveal>
-              <h2 className="mb-6 font-serif text-2xl font-semibold text-white">
-                Related Services
+        <section>
+          <Container className="py-20">
+            <Reveal className="mb-9">
+              <Eyebrow className="mb-4">Related</Eyebrow>
+              <h2 className="font-serif text-[28px] font-semibold text-navy sm:text-[34px]">
+                More {service.category.toLowerCase()}
               </h2>
             </Reveal>
-            <Stagger stagger={0.08} className="flex flex-wrap gap-4">
+            <Stagger className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {related.map((s) => (
-                <StaggerItem key={s.slug}>
-                  <Link
-                    href={`/services/${s.slug}`}
-                    className="inline-block rounded-full border border-white/20 bg-white/[0.08] px-5.5 py-3 text-[14.5px] font-semibold text-white hover:bg-white/15"
-                  >
-                    {s.title}
-                  </Link>
+                <StaggerItem key={s.slug} className="h-full">
+                  <ServiceCard service={s} showLearnMore />
                 </StaggerItem>
               ))}
             </Stagger>
@@ -228,7 +202,11 @@ export default async function ServiceDetailPage({
         </section>
       )}
 
-      <CtaBand title="Ready to request this service?" tone="plain" />
+      <CtaBand
+        title="Ready to request this service?"
+        subtitle="Send us the scope and we'll come back with a clear, costed proposal."
+        image={FEATURE.cta}
+      />
     </>
   );
 }

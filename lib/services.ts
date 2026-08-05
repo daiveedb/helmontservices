@@ -1,8 +1,13 @@
 // Service catalogue plus supporting content (values, advantages, segments, HSE).
-// `gallery` holds project photos for a service; HVAC and Project Execution
-// carry the client-supplied images.
+// Every service carries an `image` used for its card and page banner.
+// `gallery` holds additional photos; HVAC and Project Execution use the
+// client-supplied site photography, the rest use licensed stock (see
+// public/images/CREDITS.md) — so their alt text describes the scene rather than
+// claiming the work as Helmont's.
 
 export type ServiceCategory = "General Services" | "Contracting Services";
+
+export type Media = { src: string; alt: string };
 
 export type Service = {
   slug: string;
@@ -11,7 +16,8 @@ export type Service = {
   title: string;
   blurb: string;
   points: string[];
-  gallery?: { src: string; alt: string }[];
+  image: Media;
+  gallery?: Media[];
 };
 
 export const SERVICES: Service[] = [
@@ -28,6 +34,20 @@ export const SERVICES: Service[] = [
       "Grounds and common-area upkeep",
       "Scheduled maintenance reporting",
     ],
+    image: {
+      src: "/images/hvac-rooftop-team.jpg",
+      alt: "Helmont technicians servicing rooftop air handling units on an industrial site",
+    },
+    gallery: [
+      {
+        src: "/images/hand-tools-workbench.jpg",
+        alt: "Hand tools laid out on a workbench during a maintenance callout",
+      },
+      {
+        src: "/images/precision-machining.jpg",
+        alt: "Precision machinery running under routine servicing checks",
+      },
+    ],
   },
   {
     slug: "janitorial-cleaning",
@@ -41,6 +61,16 @@ export const SERVICES: Service[] = [
       "Deep cleaning and sanitation",
       "Consumable and supply management",
       "Trained, uniformed cleaning staff",
+    ],
+    image: {
+      src: "/images/floor-cleaning-mop.jpg",
+      alt: "Floor being cleaned and sanitised as part of a scheduled cleaning programme",
+    },
+    gallery: [
+      {
+        src: "/images/cleaning-surface-sanitising.jpg",
+        alt: "Gloved hands wiping down and sanitising a work surface",
+      },
     ],
   },
   {
@@ -56,6 +86,16 @@ export const SERVICES: Service[] = [
       "Training and re-training programs",
       "Ongoing personnel management",
     ],
+    image: {
+      src: "/images/technicians-onsite.jpg",
+      alt: "Helmont technicians reviewing work at an electrical cabinet on site",
+    },
+    gallery: [
+      {
+        src: "/images/construction-rebar-workers.jpg",
+        alt: "Site crew working across reinforcement steel on a construction project",
+      },
+    ],
   },
   {
     slug: "procurement-supply",
@@ -69,6 +109,20 @@ export const SERVICES: Service[] = [
       "Industrial goods and materials supply",
       "Equipment and tooling procurement",
       "Transparent, competitive pricing",
+    ],
+    image: {
+      src: "/images/warehouse-stocked-shelves.jpg",
+      alt: "Industrial warehouse racking stocked with palletised materials",
+    },
+    gallery: [
+      {
+        src: "/images/warehouse-racking-aisle.jpg",
+        alt: "Aisle of high-bay warehouse racking holding industrial stock",
+      },
+      {
+        src: "/images/container-ship-aerial.jpg",
+        alt: "Container vessel underway, representing the wider supply chain",
+      },
     ],
   },
   {
@@ -84,6 +138,10 @@ export const SERVICES: Service[] = [
       "Front-desk and facility coordination",
       "Procurement liaison services",
     ],
+    image: {
+      src: "/images/hand-tools-workbench.jpg",
+      alt: "Equipment and tooling being handed over across a supply counter",
+    },
   },
   {
     slug: "waste-management",
@@ -97,6 +155,16 @@ export const SERVICES: Service[] = [
       "Environmentally responsible handling",
       "Site cleanliness programs",
       "Compliance-focused reporting",
+    ],
+    image: {
+      src: "/images/waste-trucks-street.jpg",
+      alt: "Waste collection vehicles loading refuse on a city street",
+    },
+    gallery: [
+      {
+        src: "/images/waste-collection-truck.jpg",
+        alt: "Refuse collection truck servicing bins on a scheduled route",
+      },
     ],
   },
   {
@@ -112,6 +180,24 @@ export const SERVICES: Service[] = [
       "Structural and finishing works",
       "Project supervision and QA",
     ],
+    image: {
+      src: "/images/construction-site-aerial.jpg",
+      alt: "Aerial view of a building site with reinforced concrete columns under construction",
+    },
+    gallery: [
+      {
+        src: "/images/construction-rebar-workers.jpg",
+        alt: "Workers fixing reinforcement steel on a multi-storey structure",
+      },
+      {
+        src: "/images/rebar-mesh-worker.jpg",
+        alt: "Worker positioning reinforcement mesh ahead of a concrete pour",
+      },
+      {
+        src: "/images/city-construction-cranes.jpg",
+        alt: "Tower cranes over a city construction project at dusk",
+      },
+    ],
   },
   {
     slug: "renovation-remodeling",
@@ -125,6 +211,20 @@ export const SERVICES: Service[] = [
       "Structural reinforcement",
       "Space remodeling and upgrades",
       "Finishing and fit-out works",
+    ],
+    image: {
+      src: "/images/renovation-strip-out.jpg",
+      alt: "Interior stripped back to structure during a renovation project",
+    },
+    gallery: [
+      {
+        src: "/images/renovation-room-props.jpg",
+        alt: "Room supported by acrow props during structural remodelling works",
+      },
+      {
+        src: "/images/building-facade-ac-units.jpg",
+        alt: "Upgraded building facade with externally mounted plant",
+      },
     ],
   },
   {
@@ -140,6 +240,24 @@ export const SERVICES: Service[] = [
       "Routine maintenance and fault repair",
       "Safety inspections",
     ],
+    image: {
+      src: "/images/electrician-junction-box.jpg",
+      alt: "Electrician testing a wall-mounted junction box in protective gear",
+    },
+    gallery: [
+      {
+        src: "/images/electrical-panel-breakers.jpg",
+        alt: "Distribution board with circuit breakers and labelled wiring",
+      },
+      {
+        src: "/images/electrical-terminal-wiring.jpg",
+        alt: "Terminal block being wired and torque-checked inside a control panel",
+      },
+      {
+        src: "/images/technicians-onsite.jpg",
+        alt: "Helmont technicians working at an electrical cabinet on site",
+      },
+    ],
   },
   {
     slug: "mechanical-installation",
@@ -153,6 +271,20 @@ export const SERVICES: Service[] = [
       "Equipment repair and servicing",
       "Preventive maintenance schedules",
       "Spare parts coordination",
+    ],
+    image: {
+      src: "/images/welder-blue-arc.jpg",
+      alt: "Welder joining steel sections, arc lighting the workpiece",
+    },
+    gallery: [
+      {
+        src: "/images/welding-sparks-closeup.jpg",
+        alt: "Close-up of a welded joint being completed on a steel assembly",
+      },
+      {
+        src: "/images/precision-machining.jpg",
+        alt: "Precision machinery set up for a mechanical repair operation",
+      },
     ],
   },
   {
@@ -168,6 +300,10 @@ export const SERVICES: Service[] = [
       "Performance and efficiency checks",
       "Emergency callout support",
     ],
+    image: {
+      src: "/images/hvac-ductwork-ceiling.jpg",
+      alt: "Spiral ductwork and ventilation runs installed across a building ceiling",
+    },
     gallery: [
       {
         src: "/images/hvac-cassette-indoor.jpg",
@@ -185,6 +321,10 @@ export const SERVICES: Service[] = [
         src: "/images/hvac-rooftop-team.jpg",
         alt: "Helmont technicians servicing rooftop air handling units on an industrial site",
       },
+      {
+        src: "/images/building-facade-ac-units.jpg",
+        alt: "External condenser units mounted to a building facade",
+      },
     ],
   },
   {
@@ -200,6 +340,16 @@ export const SERVICES: Service[] = [
       "Leak detection and resolution",
       "Water and drainage system upkeep",
     ],
+    image: {
+      src: "/images/pipework-manifold.jpg",
+      alt: "Flanged pipework manifold routed through a plant room",
+    },
+    gallery: [
+      {
+        src: "/images/industrial-valves-pipework.jpg",
+        alt: "Industrial valves and process pipework in service",
+      },
+    ],
   },
   {
     slug: "project-execution",
@@ -214,6 +364,10 @@ export const SERVICES: Service[] = [
       "Quality assurance and HSE compliance",
       "Handover and post-project support",
     ],
+    image: {
+      src: "/images/power-plant-kaduna.jpg",
+      alt: "Power Plant in Kaduna — major project execution by Helmont",
+    },
     gallery: [
       {
         src: "/images/power-plant-turbines.jpg",
@@ -222,6 +376,14 @@ export const SERVICES: Service[] = [
       {
         src: "/images/power-plant-kaduna.jpg",
         alt: "Power Plant in Kaduna — major project execution by Helmont",
+      },
+      {
+        src: "/images/tower-crane-dusk.jpg",
+        alt: "Tower crane standing over a major build at dusk",
+      },
+      {
+        src: "/images/offshore-rig-dusk.jpg",
+        alt: "Offshore platform and port infrastructure at dusk",
       },
     ],
   },

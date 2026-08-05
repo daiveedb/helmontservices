@@ -6,13 +6,12 @@ export const SITE = {
   description:
     "General services and contracting support — built on reliability, safety, and operational excellence.",
   address: "14 Igbile Street, Port Harcourt, Rivers State",
-  // Phone 09051000307 removed per client request.
-  phones: ["0701 063 3390"],
+  // Phone 09051000307 replaced with 0704 822 0528 per client request.
+  phones: ["0701 063 3390", "0704 822 0528"],
+  // Single public inbox — the Admin/Catherine/Helen addresses were removed at
+  // the client's request, so everything routes through general enquiries.
   emails: [
-    { label: "General enquiries", address: "Info@helmontservices.com" },
-    { label: "Administration", address: "Admin@helmontservices.com" },
-    { label: "Catherine", address: "Catherine@helmontservices.com" },
-    { label: "Helen", address: "Helen@helmontservices.com" },
+    { label: "General enquiries", address: "info@helmontservices.com" },
   ],
 } as const;
 
