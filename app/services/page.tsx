@@ -1,12 +1,20 @@
 import type { Metadata } from "next";
 import Container from "@/components/ui/Container";
-import Eyebrow from "@/components/ui/Eyebrow";
 import ServiceCard from "@/components/ServiceCard";
+import PageHero from "@/components/PageHero";
+import StatsBand from "@/components/StatsBand";
 import CtaBand from "@/components/CtaBand";
 import Reveal from "@/components/motion/Reveal";
 import Typewriter from "@/components/motion/Typewriter";
 import { Stagger, StaggerItem } from "@/components/motion/Stagger";
-import { generalServices, contractingServices, ADVANTAGES } from "@/lib/services";
+import {
+  SERVICES,
+  generalServices,
+  contractingServices,
+  ADVANTAGES,
+  CLIENT_SEGMENTS,
+} from "@/lib/services";
+import { PAGE_BANNERS, FEATURE } from "@/lib/media";
 
 export const metadata: Metadata = {
   title: "Our Services",
@@ -14,44 +22,46 @@ export const metadata: Metadata = {
     "General services and contracting under one roof — facility support, civil, electrical, mechanical, HVAC, plumbing, and full project execution.",
 };
 
+const STATS = [
+  { value: `${generalServices.length}`, label: "General service lines" },
+  { value: `${contractingServices.length}`, label: "Contracting disciplines" },
+  { value: `${CLIENT_SEGMENTS.length}`, label: "Client sectors served" },
+  { value: `${SERVICES.length}`, label: "Ways we can help" },
+];
+
 export default function ServicesPage() {
   return (
     <>
-      {/* Hero */}
-      <section className="bg-dots-cream">
-        <Container className="py-20 text-center">
-          <Stagger stagger={0.12} amount={0}>
-            <StaggerItem className="mb-4">
-              <Eyebrow>Our Services</Eyebrow>
-            </StaggerItem>
-            <StaggerItem className="mb-4">
-              <h1 className="font-serif text-[40px] font-semibold text-navy sm:text-[44px]">
-                <Typewriter text="General services and contracting, under one roof." />
-              </h1>
-            </StaggerItem>
-            <StaggerItem>
-              <p className="mx-auto max-w-[640px] text-[17px] text-muted">
-                Solutions-driven support for individuals, businesses, and
-                large-scale industrial clients — delivered with reliability,
-                safety, and operational excellence.
-              </p>
-            </StaggerItem>
-          </Stagger>
-        </Container>
-      </section>
+      <PageHero
+        image={PAGE_BANNERS.services}
+        eyebrow="Our Services"
+        title={
+          <Typewriter
+            text="General services and contracting, under one roof."
+            caretClassName="bg-peach"
+          />
+        }
+        subtitle="Solutions-driven support for individuals, businesses, and large-scale industrial clients — delivered with reliability, safety, and operational excellence."
+      />
 
       {/* General services */}
       <section>
-        <Container className="pt-14 pb-4">
-          <Reveal className="mb-7 flex flex-wrap items-baseline justify-between gap-3">
-            <h2 className="font-serif text-[28px] font-semibold text-navy">
-              General Services
-            </h2>
-            <p className="text-[14.5px] text-muted">
-              Facility, workplace, and operational support for everyday continuity.
+        <Container className="pt-18 pb-6">
+          <Reveal className="mb-8 flex flex-wrap items-end justify-between gap-4 border-b border-navy/15 pb-6">
+            <div>
+              <div className="mb-3 font-mono text-xs tracking-[0.14em] text-terracotta">
+                01 — GENERAL SERVICES
+              </div>
+              <h2 className="font-serif text-[30px] font-semibold text-navy sm:text-[36px]">
+                Everyday operational support
+              </h2>
+            </div>
+            <p className="max-w-[320px] text-[14.5px] leading-relaxed text-muted">
+              Facility, workplace, and operational support that keeps sites
+              running without interruption.
             </p>
           </Reveal>
-          <Stagger className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <Stagger className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {generalServices.map((s) => (
               <StaggerItem key={s.slug} className="h-full">
                 <ServiceCard service={s} showLearnMore />
@@ -63,16 +73,22 @@ export default function ServicesPage() {
 
       {/* Contracting services */}
       <section>
-        <Container className="pt-6 pb-22">
-          <Reveal className="mb-7 flex flex-wrap items-baseline justify-between gap-3">
-            <h2 className="font-serif text-[28px] font-semibold text-navy">
-              Contracting Services
-            </h2>
-            <p className="text-[14.5px] text-muted">
-              Civil, electrical, mechanical, and structural project execution.
+        <Container className="pt-14 pb-20">
+          <Reveal className="mb-8 flex flex-wrap items-end justify-between gap-4 border-b border-navy/15 pb-6">
+            <div>
+              <div className="mb-3 font-mono text-xs tracking-[0.14em] text-terracotta">
+                02 — CONTRACTING SERVICES
+              </div>
+              <h2 className="font-serif text-[30px] font-semibold text-navy sm:text-[36px]">
+                Project delivery, end to end
+              </h2>
+            </div>
+            <p className="max-w-[320px] text-[14.5px] leading-relaxed text-muted">
+              Civil, electrical, mechanical, and structural execution from scope
+              through handover.
             </p>
           </Reveal>
-          <Stagger className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <Stagger className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {contractingServices.map((s) => (
               <StaggerItem key={s.slug} className="h-full">
                 <ServiceCard service={s} showLearnMore />
@@ -82,11 +98,13 @@ export default function ServicesPage() {
         </Container>
       </section>
 
+      <StatsBand image={FEATURE.stats} stats={STATS} />
+
       {/* Why choose */}
       <section className="bg-cream-alt">
-        <Container className="py-18">
+        <Container className="py-20">
           <Reveal>
-            <h2 className="mb-9 text-center font-serif text-[28px] font-semibold text-navy">
+            <h2 className="mb-10 text-center font-serif text-[30px] font-semibold text-navy sm:text-[36px]">
               Why Clients Choose Helmont
             </h2>
           </Reveal>
@@ -112,8 +130,9 @@ export default function ServicesPage() {
 
       <CtaBand
         title="Don't see exactly what you need?"
+        subtitle="We scope bespoke packages across both divisions — tell us the requirement."
         buttonLabel="Talk to Us"
-        tone="plain"
+        image={FEATURE.cta}
       />
     </>
   );

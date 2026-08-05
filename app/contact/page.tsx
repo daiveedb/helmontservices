@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import Container from "@/components/ui/Container";
 import Eyebrow from "@/components/ui/Eyebrow";
+import PageHero from "@/components/PageHero";
 import ContactForm from "@/components/ContactForm";
 import Reveal from "@/components/motion/Reveal";
 import Typewriter from "@/components/motion/Typewriter";
-import { Stagger, StaggerItem } from "@/components/motion/Stagger";
 import { SITE } from "@/lib/site";
+import { PAGE_BANNERS } from "@/lib/media";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -16,31 +17,22 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <>
-      {/* Hero */}
-      <section className="bg-dots-cream">
-        <Container className="pt-20 pb-5 text-center">
-          <Stagger stagger={0.12} amount={0}>
-            <StaggerItem className="mb-4">
-              <Eyebrow>Contact</Eyebrow>
-            </StaggerItem>
-            <StaggerItem className="mb-4">
-              <h1 className="font-serif text-[40px] font-semibold text-navy sm:text-[44px]">
-                <Typewriter text="Let’s talk about your project." speed={42} />
-              </h1>
-            </StaggerItem>
-            <StaggerItem>
-              <p className="mx-auto max-w-[560px] text-[17px] text-muted">
-                Reach out for a quote, a site visit, or to discuss requirements —
-                our team responds quickly.
-              </p>
-            </StaggerItem>
-          </Stagger>
-        </Container>
-      </section>
+      <PageHero
+        image={PAGE_BANNERS.contact}
+        eyebrow="Contact"
+        title={
+          <Typewriter
+            text="Let’s talk about your project."
+            speed={42}
+            caretClassName="bg-peach"
+          />
+        }
+        subtitle="Reach out for a quote, a site visit, or to discuss requirements — our team responds quickly."
+      />
 
       {/* Details + form */}
       <section>
-        <Container className="grid items-start gap-8 py-14 lg:grid-cols-[0.8fr_1.2fr]">
+        <Container className="grid items-start gap-8 py-16 lg:grid-cols-[0.8fr_1.2fr]">
           {/* Info card */}
           <Reveal
             direction="right"
