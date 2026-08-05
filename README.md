@@ -64,8 +64,9 @@ cards, split feature sections, and photographic stats/CTA bands.
 
 - Phone number `09051000307` replaced by `0704 822 0528`; the listed lines are
   `0701 063 3390` and `0704 822 0528` — edit in `lib/site.ts`.
-- Four email addresses across the site (footer + contact page): `Info@`, `Admin@`,
-  `Catherine@`, and `Helen@helmontservices.com` — edit in `lib/site.ts`.
+- A single email address across the site (footer + contact page):
+  `info@helmontservices.com` — the `Admin@`, `Catherine@`, and `Helen@` addresses
+  were removed at the client's request. Edit in `lib/site.ts`.
 - **HVAC Installation & Servicing** (`/services/hvac`) has a Project Gallery of HVAC photos
   displayed side by side.
 - **Minor & Major Project Execution** (`/services/project-execution`) has a Project Gallery

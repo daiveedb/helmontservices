@@ -71,9 +71,13 @@ export default function Header() {
             : "border-white/20 bg-navy/35"
         }`}
       >
+        {/* Newsreader reserves far more room above the baseline than below
+            (18px ascent vs 6px descent at this size), and the wordmark has no
+            descenders — so a geometrically centred box still reads ~2px high.
+            The nudge lines the glyphs up with the nav links optically. */}
         <Link
           href="/"
-          className={`font-serif text-2xl font-semibold tracking-[0.2px] transition-colors ${
+          className={`translate-y-[2px] font-serif text-2xl font-semibold tracking-[0.2px] transition-colors ${
             scrolled ? "text-navy" : "text-white"
           }`}
         >
